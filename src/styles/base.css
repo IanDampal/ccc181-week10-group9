@@ -17,14 +17,6 @@
 
 
 /* ---- 1. PHONE (no media query) --------------------------------------- */
-git config --global user.name "Kirtz Darwin D. Federico"
-git config --global user.email "kirtzdawrin.federico@msunaawan.edu.ph"
-
-git checkout -b feature/<projectmanager>-<federico>
-
-git add src/styles/base.css
-git commit -m "I made my mobile-first layout for base.css. It handles the phone screen, tablet and laptop sizes, and the big desktop screen. But I accidentally pasted git commands inside my code file, so I need to clean them up before sending it to GitHub."
-git push -u origin feature/<projectmanager>-<federico>
 
 /* Keeps the footer at the bottom of the screen */
 .page {
