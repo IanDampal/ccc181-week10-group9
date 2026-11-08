@@ -17,6 +17,10 @@
 
 
 /* ---- 1. PHONE (no media query) --------------------------------------- */
+git config --global user.name "Kirtz Darwin D. Federico"
+git config --global user.email "kirtzdawrin.federico@msunaawan.edu.ph"
+
+git checkout -b feature/projectmanager-federico
 
 /* Keeps the footer at the bottom of the screen */
 .page {
