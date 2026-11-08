@@ -148,8 +148,7 @@
   font-size: 0.875rem;
 }
 
-
-/* ---- 2. 768px and up (tablets) --------------------------------------- */
+/* 2. 768px and up (tablets) */
 @media (min-width: 768px) {
   /* Brand LEFT, links RIGHT */
   .navbar {
@@ -165,8 +164,7 @@
   }
 }
 
-
-/* ---- 3. 1024px and up (laptops) -------------------------------------- */
+/* 3. 1024px and up (laptops) */
 @media (min-width: 1024px) {
   /* Footer in three equal columns */
   .footer-grid {
