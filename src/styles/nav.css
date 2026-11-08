@@ -147,30 +147,3 @@
   margin-top: 1rem;
   font-size: 0.875rem;
 }
-
-
-/* ---- 2. 768px and up (tablets) --------------------------------------- */
-@media (min-width: 768px) {
-  /* Brand LEFT, links RIGHT */
-  .navbar {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  /* Links in ONE row */
-  .nav-list {
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-}
-
-
-/* ---- 3. 1024px and up (laptops) -------------------------------------- */
-@media (min-width: 1024px) {
-  /* Footer in three equal columns */
-  .footer-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-  }
-}
