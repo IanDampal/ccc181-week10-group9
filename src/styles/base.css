@@ -15,7 +15,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1" />
    -------------------------------------------------------------------- */
 
-
+   
 /* ---- 1. PHONE (no media query) --------------------------------------- */
 
 /* Keeps the footer at the bottom of the screen */
@@ -31,6 +31,7 @@
 
 /* Full width with comfortable side padding */
 .container {
+  box-sizing: border-box;
   width: 100%;
   padding-inline: 1rem;
 }
@@ -38,7 +39,7 @@
 /* One column on phones */
 .login-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
   padding-block: 1.5rem;
 }
@@ -60,7 +61,7 @@
   font-weight: 700;
   font-size: 0.875rem;
   padding: 0.25rem 0.75rem;
-  border-radius: 999px;
+  border-radius: 999rem;
 }
 
 .brand-panel__title {
@@ -89,7 +90,7 @@
 @media (min-width: 1024px) {
   /* Brand panel and login card side by side */
   .login-layout {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
     gap: 3rem;
     padding-block: 3rem;
