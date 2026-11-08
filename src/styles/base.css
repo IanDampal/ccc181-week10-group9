@@ -20,7 +20,11 @@
 git config --global user.name "Kirtz Darwin D. Federico"
 git config --global user.email "kirtzdawrin.federico@msunaawan.edu.ph"
 
-git checkout -b feature/projectmanager-federico
+git checkout -b feature/<projectmanager>-<federico>
+
+git add src/styles/base.css
+git commit -m "descriptive message about what you did"
+git push -u origin feature/<projectmanager>-<federico>
 
 /* Keeps the footer at the bottom of the screen */
 .page {
