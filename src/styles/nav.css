@@ -163,3 +163,12 @@
     gap: 0.5rem;
   }
 }
+
+/* 3. 1024px and up (laptops) */
+@media (min-width: 1024px) {
+  /* Footer in three equal columns */
+  .footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
