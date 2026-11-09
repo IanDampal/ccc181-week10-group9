@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import './styles/auth.css';
 
 // Import order matters: when two rules tie, the later file wins.
 import './styles/reset.css'; // GIVEN: design tokens + reset (do not edit)
