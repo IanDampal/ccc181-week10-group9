@@ -1,8 +1,20 @@
-// GIVEN FILE (styled in form.css by Member 3). Do not edit.
-// The sign-in is a DEMO: nothing is sent to a server and nothing is saved.
+// Login form (styled in form.css). Sends the credentials to POST /api/v1/sessions.
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import type { LoginErrors, LoginFormValues } from '../types';
+import { loginApi } from '../api/auth';
+
+export interface LoggedInUser {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface LoginFormProps {
+  onLogin?: (user: LoggedInUser) => void;
+}
+
+type Status = 'idle' | 'loading' | 'success' | 'error';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -14,7 +26,7 @@ const INITIAL_VALUES: LoginFormValues = {
 
 function validate(values: LoginFormValues): LoginErrors {
   const errors: LoginErrors = {};
-  if (!EMAIL_PATTERN.test(values.email)) {
+  if (!EMAIL_PATTERN.test(values.email.trim())) {
     errors.email = 'Enter a valid email address.';
   }
   if (values.password.length < 8) {
@@ -23,11 +35,12 @@ function validate(values: LoginFormValues): LoginErrors {
   return errors;
 }
 
-export default function LoginForm() {
+export default function LoginForm({ onLogin }: LoginFormProps) {
   const [values, setValues] = useState<LoginFormValues>(INITIAL_VALUES);
   const [errors, setErrors] = useState<LoginErrors>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [signedInAs, setSignedInAs] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>('idle');
+  const [message, setMessage] = useState<string>('');
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, type, value, checked } = event.target;
@@ -37,12 +50,50 @@ export default function LoginForm() {
     }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // 1. Check the fields in the browser first
     const nextErrors = validate(values);
     setErrors(nextErrors);
-    setSignedInAs(Object.keys(nextErrors).length === 0 ? values.email : null);
+    if (Object.keys(nextErrors).length > 0) {
+      setStatus('idle');
+      setMessage('');
+      return;
+    }
+
+    // 2. Loading
+    setStatus('loading');
+    setMessage('');
+
+    try {
+      // 3. Ask the server
+      const data = await loginApi(values.email.trim(), values.password);
+
+      // "Keep me signed in" ON -> localStorage, OFF -> sessionStorage
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+      const storage = values.remember ? localStorage : sessionStorage;
+      storage.setItem('token', data.token);
+
+      // 4. Success, then show the Welcome screen
+      setStatus('success');
+      setMessage(`Welcome, ${data.user.name}!`);
+      setTimeout(() => onLogin?.(data.user), 700);
+    } catch (err) {
+      // 5. Error: "Invalid email or password." or a network message
+      setStatus('error');
+      setMessage(
+        err instanceof TypeError
+          ? 'Cannot reach the server. Please try again.'
+          : err instanceof Error
+            ? err.message
+            : 'Login failed.'
+      );
+    }
   }
+
+  const busy = status === 'loading' || status === 'success';
 
   return (
     <section className="login-card" aria-labelledby="login-title">
@@ -63,6 +114,7 @@ export default function LoginForm() {
             placeholder="name@school.edu.ph"
             value={values.email}
             onChange={handleChange}
+            disabled={busy}
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? 'email-error' : undefined}
           />
@@ -83,6 +135,7 @@ export default function LoginForm() {
               autoComplete="current-password"
               value={values.password}
               onChange={handleChange}
+              disabled={busy}
               aria-invalid={Boolean(errors.password)}
               aria-describedby={errors.password ? 'password-error' : undefined}
             />
@@ -110,6 +163,7 @@ export default function LoginForm() {
               name="remember"
               checked={values.remember}
               onChange={handleChange}
+              disabled={busy}
             />
             <span>Keep me signed in</span>
           </label>
@@ -118,14 +172,23 @@ export default function LoginForm() {
           </a>
         </div>
 
-        <button type="submit" className="btn btn--primary">
-          Sign in
+        <button type="submit" className="btn btn--primary" disabled={busy}>
+          {status === 'loading' ? 'Signing in...' : 'Sign in'}
         </button>
 
-        {signedInAs && (
+        {status === 'loading' && (
+          <p className="form-status" role="status">
+            Loading...
+          </p>
+        )}
+        {status === 'success' && (
           <p className="form-success" role="status">
-            Demo only: {signedInAs} would be signed in here. Nothing was sent
-            or saved.
+            {message}
+          </p>
+        )}
+        {status === 'error' && (
+          <p className="form-error" role="alert">
+            {message}
           </p>
         )}
       </form>
